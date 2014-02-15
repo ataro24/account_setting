@@ -44,6 +44,20 @@ data_ids.each do |id|
     mode "0600"
     content u['pub_key']
   end
+
+  bash "install mylib" do
+    only_if "which git"
+    user u['uname']
+    cwd u['home']
+    environment "HOME" => u['home']
+    code <<-EOH
+      git clone https://github.com/Ataro24/mylib.git
+      chown -R #{u['uname']}:#{u['gname']} mylib
+      cd mylib
+      sh ./install.sh -f
+    EOH
+  end if u['mylib']
+
 end
 
 
